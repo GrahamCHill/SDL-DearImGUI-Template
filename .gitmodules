@@ -2,3 +2,6 @@
 	path = GameTemplate/Submodules/imgui
 	url = https://github.com/ocornut/imgui.git
 	branch = docking
+[submodule "external/SDL3"]
+	path = external/SDL3
+	url = https://github.com/libsdl-org/SDL.git
