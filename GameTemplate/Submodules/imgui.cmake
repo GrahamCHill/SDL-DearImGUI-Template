@@ -1,0 +1,9 @@
+set(IMGUI_REQ
+        ${CMAKE_CURRENT_SOURCE_DIR}/Submodules/imgui/imgui.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/Submodules/imgui/imgui_draw.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/Submodules/imgui/imgui_demo.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/Submodules/imgui/imgui_tables.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/Submodules/imgui/imgui_widgets.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/Submodules/imgui/backends/imgui_impl_vulkan.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/Submodules/imgui/backends/imgui_impl_sdl3.cpp
+)

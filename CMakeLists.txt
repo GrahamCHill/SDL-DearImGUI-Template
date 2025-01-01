@@ -5,9 +5,11 @@ if(APPLE)
 endif ()
 project(GameTemplate)
 
+message(STATUS "Generating CMake Build Files For Application")
 
 set(CMAKE_CXX_STANDARD 20)
 
 add_subdirectory(External)
-
+message(STATUS "Successfully Generated External Project Build Files")
 add_subdirectory(GameTemplate)
+message(STATUS "Successfully Generated Main Project Build Files")
