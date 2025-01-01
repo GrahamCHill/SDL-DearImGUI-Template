@@ -1,9 +1,15 @@
+# Add ImGui include directories
+include_directories(
+        ${SUBMODULE_CMAKE}/imgui
+        ${SUBMODULE_CMAKE}/imgui/backends
+)
+
 set(IMGUI_REQ
-        ${CMAKE_CURRENT_SOURCE_DIR}/Submodules/imgui/imgui.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/Submodules/imgui/imgui_draw.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/Submodules/imgui/imgui_demo.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/Submodules/imgui/imgui_tables.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/Submodules/imgui/imgui_widgets.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/Submodules/imgui/backends/imgui_impl_vulkan.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/Submodules/imgui/backends/imgui_impl_sdl3.cpp
+        ${SUBMODULE_CMAKE}/imgui/imgui.cpp
+        ${SUBMODULE_CMAKE}/imgui/imgui_draw.cpp
+        ${SUBMODULE_CMAKE}/imgui/imgui_demo.cpp
+        ${SUBMODULE_CMAKE}/imgui/imgui_tables.cpp
+        ${SUBMODULE_CMAKE}/imgui/imgui_widgets.cpp
+        ${SUBMODULE_CMAKE}/imgui/backends/imgui_impl_vulkan.cpp
+        ${SUBMODULE_CMAKE}/imgui/backends/imgui_impl_sdl3.cpp
 )
