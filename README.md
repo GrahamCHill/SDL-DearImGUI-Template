@@ -40,13 +40,13 @@ project.
 
 #### Third-Party Libraries
 
-This project uses the Dear ImGui GUI Framework. The MIT license is included in the folder 
+- This project uses the Dear ImGui GUI Framework. The MIT license is included in the folder 
 `src/Submodules/imgui`.
 
-This project uses Vulkan. The license for which is available from them 
+- This project uses Vulkan. The license for which is available from them 
 [Vulkan Site](https://vulkan.lunarg.com/license/).
 
-This project uses SDL3. The Zlib license is included in the folder `external/SDL3`.
+- This project uses SDL3. The Zlib license is included in the folder `external/SDL3`.
 
-This project uses the Tiny File Dialog Project. The zlib license is included in the source code files of 
+- This project uses the Tiny File Dialog Project. The zlib license is included in the source code files of 
 `src/Submodules/tinyfd`.
