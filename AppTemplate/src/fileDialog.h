@@ -7,21 +7,8 @@
 
 #include <iostream>
 #include <string>
-#include <fstream>
-#include "tinyfiledialogs.h"
 
-#if defined(_WIN32)
-#include <windows.h>
-#include <shlobj.h>
-#elif defined(__linux__)
-#include <unistd.h>
-#include <limits.h>
-#elif defined(__APPLE__)
-#include <mach-o/dyld.h>
-#include <sys/types.h>
-#include <pwd.h>
-#include <unistd.h>
-#endif
+
 
 class fileDialog {
 public:

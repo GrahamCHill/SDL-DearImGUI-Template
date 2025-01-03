@@ -7,6 +7,7 @@ include_directories(
 set(TINYFD_REQ
         ${SUBMODULE_CMAKE}/tinyfd/tinyfiledialogs.c
         ${SUBMODULE_CMAKE}/tinyfd/tinyfiledialogs.h
+        # If you need the other Dialogs from Tiny File Dialog uncomment them here
 #        ${SUBMODULE_CMAKE}/tinyfd/tinyfd_moredialogs.c
 #        ${SUBMODULE_CMAKE}/tinyfd/tinyfd_moredialogs.h
 )

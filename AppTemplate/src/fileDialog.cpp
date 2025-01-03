@@ -4,6 +4,20 @@
 
 #include "fileDialog.h"
 
+#include <fstream>
+
+#if defined(_WIN32)
+#include <windows.h>
+#include <shlobj.h>
+#elif defined(__linux__)
+#include <unistd.h>
+#include <limits.h>
+#elif defined(__APPLE__)
+#include <mach-o/dyld.h>
+#include <pwd.h>
+#include <unistd.h>
+#endif
+
 std::string fileDialog::ensureTrailingSlash(const std::string& path) {
     if (path.empty()) return path;
     char lastChar = path.back();
