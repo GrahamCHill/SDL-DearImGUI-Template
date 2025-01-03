@@ -1,7 +1,10 @@
-[submodule "GameTemplate/Submodules/imgui"]
-	path = GameTemplate/Submodules/imgui
-	url = https://github.com/ocornut/imgui.git
-	branch = docking
 [submodule "external/SDL3"]
 	path = external/SDL3
 	url = https://github.com/libsdl-org/SDL.git
+[submodule "AppTemplate/Submodules/imgui"]
+	path = AppTemplate/Submodules/imgui
+	url = https://github.com/ocornut/imgui
+	branch = docking
+[submodule "AppTemplate/Submodules/tinyfd"]
+	path = AppTemplate/Submodules/tinyfd
+	url = http://git.code.sf.net/p/tinyfiledialogs/code
