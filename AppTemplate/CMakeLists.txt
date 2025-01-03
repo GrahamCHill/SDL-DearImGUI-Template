@@ -10,16 +10,16 @@ else()
         message(STATUS "Building Non-Debug/Release Build")
 endif()
 
-add_executable(GameTemplate
+add_executable(AppTemplate
         src/main.cpp
         src/main.h
         ${IMGUI_REQ}
         )
 
 # Include SDL3 headers and Vulkan/MoltenVK
-target_include_directories(GameTemplate PRIVATE ${SDL3_INCLUDE} ${Vulkan_INCLUDE_DIRS})
+target_include_directories(AppTemplate PRIVATE ${SDL3_INCLUDE} ${Vulkan_INCLUDE_DIRS})
 
 # Link against the SDL3-static target
-target_link_libraries(GameTemplate PRIVATE SDL3::SDL3 ${Vulkan_LIBRARIES})
+target_link_libraries(AppTemplate PRIVATE SDL3::SDL3 ${Vulkan_LIBRARIES})
 
 include(CMake_Bundler/CMakeLists.txt)
