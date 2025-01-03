@@ -554,8 +554,12 @@ int main(int, char**)
         }
         {
             ImGui::SetNextWindowPos(ImVec2(200, 600));
-            ImGui::Begin("File Dialog Test");
+            ImGui::SetNextWindowSize(ImVec2(400, 200));
+            ImGui::Begin("File Dialog Test", nullptr, ImGuiWindowFlags_NoResize);
 
+            ImGui::TextWrapped("This opens a default file system explorer to select a file, it also remembers where "
+                        "last you were in the file explorer.");
+            ImGui::Spacing();
             // Get last selected path
             std::string lastPath = fileDialog::getLastSelectedPath();
 

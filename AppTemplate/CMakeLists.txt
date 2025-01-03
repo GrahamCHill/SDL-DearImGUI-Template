@@ -13,10 +13,10 @@ endif()
 add_executable(AppTemplate
         src/main.cpp
         src/main.h
-        ${IMGUI_REQ}
-        ${TINYFD_REQ}
         src/fileDialog.cpp
         src/fileDialog.h
+        ${IMGUI_REQ}
+        ${TINYFD_REQ}
         )
 
 # Include SDL3 headers and Vulkan/MoltenVK
