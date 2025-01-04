@@ -1,5 +1,7 @@
 
-# SDL3-Vulkan-DearImGUI-Template
+# SDL3+Vulkan+DearImGU Project Template
+
+This template is built with git submodules, and CMake!
 
 This a template designed around the CMake build system, it includes 
 [Dear ImGui](https://github.com/ocornut/imgui), [Vulkan](https://vulkan.lunarg.com/),
@@ -31,6 +33,33 @@ cmake ..
 make
 
 ```
+### Removing Unwanted Libraries
+This template has made a few simple choices in order to show you how you can structure your project or add other git repositories to your 
+project, but if you don't want any of them you just have to remove them, remove the reference to it in .gitsubmodules and alter the 
+relevant CMake files from your project for example with Tiny File Dialog files you can remove it by deleting the following files in the 
+project:
+
+- `/AppTemplate/Submodules/tinyfd.cmake`
+- `/AppTemplate/Submodules/tinyfd/*`  
+
+The line in the CMakeLists.txt file present in `AppTemplate/Submodules/` which says `include(${SUBMODULE_CMAKE}/tinyfd.cmake)`.
+
+The files I wrote using them located at 
+
+- `/AppTemplate/src/fileDialog.h`
+- `/AppTemplate/src/fileDialog.cpp`
+
+Any reference to them in the `main.h` and `main.cpp` files.
+
+Finally remove the following from `/AppTemplate/CMakeLists.txt` located in the `set_executable` command
+
+- `src/fileDialog.cpp`
+- `src/fileDialog.h`
+- `${TINYFD_REQ}`
+
+You can also disable Vulkan and use only SDL3's renderer, if you choose by modifying your CMakeLists files, as this template is
+built for you to make use of so you can skip to learning SDL3, Dear ImGui, Vulkan, and/or whatever you want to add/remove into 
+this template.
 
 
 ### License
