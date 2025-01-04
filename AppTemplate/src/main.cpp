@@ -553,9 +553,9 @@ int main(int, char**)
             ImGui::End();
         }
         {
-            ImGui::SetNextWindowPos(ImVec2(200, 600));
-            ImGui::SetNextWindowSize(ImVec2(400, 200));
-            ImGui::Begin("File Dialog Test", nullptr, ImGuiWindowFlags_NoResize);
+            ImGui::SetNextWindowPos(ImVec2(200, 600), ImGuiCond_Once );
+            ImGui::SetNextWindowSize(ImVec2(400, 200), ImGuiCond_Once);
+            ImGui::Begin("File Dialog Test", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse );
 
             ImGui::TextWrapped("This opens a default file system explorer to select a file, it also remembers where "
                         "last you were in the file explorer.");
