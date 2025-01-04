@@ -61,6 +61,22 @@ You can also disable Vulkan and use only SDL3's renderer, if you choose by modif
 built for you to make use of so you can skip to learning SDL3, Dear ImGui, Vulkan, and/or whatever you want to add/remove into 
 this template.
 
+### Adding New Libraries/git Projects
+
+To add a new library like SDL3, I recomend using the project layout I have set up and adding it as either a git submodule if 
+it can be built with CMake to the folder `/External/` followed by the project/git repository name, if adding with git submodules
+you can for example run (the command below shows how to add the SDL2 branch to your project, if you would rather use that*.)
+```shell
+git submodule add -b SDL2 https://github.com/libsdl-org/SDL.git External/SDL2
+```
+\* - You will have to make several changes throughout the CMake build system, and the CMake Bundler scripts will not work without
+  changes
+
+If you want to integrate code directly into the main program you can instead use the `/AppTemplate/Submodules/` directory as 
+opposed to `External` in the above command.
+
+Some External Libraries and git repositories, might not be built with CMake, in which case you can look at how the imgui.cmake,
+and `imgui` folder located in `/AppTemplate/Submodules/` is integrated into the project to bring your wanted project in.
 
 ### License
 #### This Project
@@ -79,3 +95,6 @@ project.
 
 - This project uses the Tiny File Dialog Project. The zlib license is included in the source code files of 
 `src/Submodules/tinyfd`.
+
+### Other 
+If you appreciate it, give sugestions to make it better, drop a star, or tell a friend.
