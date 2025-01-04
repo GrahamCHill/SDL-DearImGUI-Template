@@ -9,7 +9,6 @@ if(USE_BUNDLER)
 else()
     message(STATUS "Not Using Bundler")
     if (APPLE)
-            message(STATUS "Bundling for a debug build -- will not be portable")
             message(NOTICE "Remember to update where your Vulkan Install is, for a Release build")
             add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
                     COMMAND install_name_tool -change

@@ -47,7 +47,6 @@
 
     if(CMAKE_BUILD_TYPE STREQUAL "Debug")
         message(STATUS "Bundling for a debug build -- will not be portable")
-        message(NOTICE "Remember to update where your Vulkan Install is, for a Release build")
         add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
                 # This is what copies the SDL3 Frameworks over to the output binary
                 COMMAND ${CMAKE_COMMAND} -E copy

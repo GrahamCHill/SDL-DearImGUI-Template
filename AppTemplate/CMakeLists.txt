@@ -13,14 +13,19 @@ endif()
 add_executable(AppTemplate
         src/main.cpp
         src/main.h
+        ${TINYFD_REQ}
+        ${IMGUI_REQ}
         src/fileDialog.cpp
         src/fileDialog.h
-        ${IMGUI_REQ}
-        ${TINYFD_REQ}
         )
 
 # Include SDL3 headers and Vulkan/MoltenVK
-target_include_directories(AppTemplate PRIVATE ${SDL3_INCLUDE} ${Vulkan_INCLUDE_DIRS})
+target_include_directories(AppTemplate
+        PRIVATE
+        ${SDL3_INCLUDE}
+        ${Vulkan_INCLUDE_DIRS}
+
+)
 
 # Link against the SDL3-static target
 target_link_libraries(AppTemplate PRIVATE SDL3 ${Vulkan_LIBRARIES})
