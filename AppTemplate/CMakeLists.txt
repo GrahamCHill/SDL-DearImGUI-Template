@@ -20,10 +20,7 @@ add_executable(AppTemplate
         )
 
 # Include SDL3 headers and Vulkan/MoltenVK
-message(WARNING "${SDL3_INCLUDE}")
 target_include_directories(AppTemplate PRIVATE ${SDL3_INCLUDE} ${Vulkan_INCLUDE_DIRS})
-
-
 
 # Link against the SDL3-static target
 target_link_libraries(AppTemplate PRIVATE SDL3 ${Vulkan_LIBRARIES})
