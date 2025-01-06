@@ -1,5 +1,5 @@
-[submodule "external/SDL3"]
-	path = external/SDL3
+[submodule "External/SDL3"]
+	path = External/SDL3
 	url = https://github.com/libsdl-org/SDL.git
 [submodule "AppTemplate/Submodules/imgui"]
 	path = AppTemplate/Submodules/imgui

@@ -9,6 +9,7 @@ endif ()
 
 if (APPLE)
     add_library(SDL3 SHARED IMPORTED)
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/SDL3)
     set(SDL3_DIR "${CMAKE_SOURCE_DIR}/External/SDL3")
     set(SDL3_LIB "${CMAKE_BINARY_DIR}/External/SDL3/libSDL3.dylib" CACHE STRING "Path to SDL3 static library") # Adjust if the build path differs
     set_target_properties(SDL3 PROPERTIES

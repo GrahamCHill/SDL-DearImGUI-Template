@@ -553,7 +553,7 @@ int main(int, char**)
             ImGui::End();
         }
         {
-            ImGui::SetNextWindowPos(ImVec2(200, 600), ImGuiCond_Once );
+            // ImGui::SetNextWindowPos(ImVec2(200, 600), ImGuiCond_Once );
             ImGui::SetNextWindowSize(ImVec2(400, 200), ImGuiCond_Once);
             ImGui::Begin("File Dialog Test", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse );
 
