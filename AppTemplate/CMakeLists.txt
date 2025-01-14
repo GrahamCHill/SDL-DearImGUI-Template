@@ -15,6 +15,10 @@ endif()
 
 
 add_executable(AppTemplate
+        # Logic for the Metal/SDL3 backend still needs to be sorted, but for now
+        # you can comment out src/main.h and src/main.cpp and uncomment src/main.mm
+        # to test Metal/SDL3 support (Note windows can't be removed from main window
+        # ie floating windows, as this will cause a segfault currently.)
 #        src/main.mm
         src/main.h
         src/main.cpp
