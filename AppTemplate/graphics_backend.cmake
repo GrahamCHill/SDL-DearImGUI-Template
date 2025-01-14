@@ -38,9 +38,8 @@ elseif (GRAPHICS_BACKEND STREQUAL "METAL")
     elseif (WIN32)
         # !!! UNTESTED !!!
         # DirectX Configuration for Windows
-        find_package(DirectX REQUIRED)
         # Link DirectX libraries
-        set(GRAPHICS_INCLUDE_LIBRARIES  d3d12 dxgi d3dcompiler)
+        set(GRAPHICS_INCLUDE_LIBRARIES  d3d11.lib dxgi.lib )
         # Add DirectX headers (optional, if custom paths are needed)
         set(GRAPHICS_INCLUDE_DIRECTORIES ${DirectX_INCLUDE_DIRS})
 

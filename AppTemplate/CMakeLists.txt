@@ -2,7 +2,7 @@
 # If using IDE change option->set and OFF->True
 option(USE_BUNDLER OFF) # WILL NOT WORK IF NOT VULKAN RIGHT NOW
 # Options are "OPENGL", "VULKAN" or to delete it and let the system decide
-set(GRAPHICS_BACKEND "VULKAN")
+set(GRAPHICS_BACKEND "METAL")
 
 include(graphics_backend.cmake)
 include(Submodules/CMakeLists.txt)
@@ -20,12 +20,13 @@ add_executable(AppTemplate
         # to test Metal/SDL3 support (Note windows can't be removed from main window
         # ie floating windows, as this will cause a segfault currently.)
 #        src/main.mm
-        src/main.h
-        src/main.cpp
+#        src/main.h
+#        src/main.cpp
         ${TINYFD_REQ}
         ${IMGUI_REQ}
         src/fileDialog.cpp
         src/fileDialog.h
+        main.cpp
 )
 
 

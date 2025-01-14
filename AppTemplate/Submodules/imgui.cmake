@@ -38,7 +38,7 @@ else ()
         # DirectX Configuration for Windows
         set(IMGUI_REQ
                 ${IMGUI_MAIN}
-                ${SUBMODULE_CMAKE}/imgui/backends/imgui_impl_dx12.cpp
+                ${SUBMODULE_CMAKE}/imgui/backends/imgui_impl_dx11.cpp
         )
 
     else () # Linux will default to Vulkan
