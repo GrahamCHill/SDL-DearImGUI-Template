@@ -2,7 +2,7 @@
 # If using IDE change option->set and OFF->True
 option(USE_BUNDLER OFF) # WILL NOT WORK IF NOT VULKAN RIGHT NOW
 # Options are "OPENGL", "VULKAN" or to delete it and let the system decide
-set(GRAPHICS_BACKEND "METAL")
+set(GRAPHICS_BACKEND "VULKAN")
 
 include(graphics_backend.cmake)
 include(Submodules/CMakeLists.txt)
