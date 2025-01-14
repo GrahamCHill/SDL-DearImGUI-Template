@@ -24,8 +24,27 @@ elseif (GRAPHICS_BACKEND STREQUAL "OPENGL")
             ${SUBMODULE_CMAKE}/imgui/backends/imgui_impl_opengl3.cpp
     )
 else ()
-    set(IMGUI_REQ
-            ${IMGUI_MAIN}
-            ${SUBMODULE_CMAKE}/imgui/backends/imgui_impl_vulkan.cpp
-    )
+    if (APPLE)
+        # Metal Configuration for macOS
+        set(IMGUI_REQ
+                ${IMGUI_MAIN}
+                ${SUBMODULE_CMAKE}/imgui/backends/imgui_impl_metal.mm
+        )
+        set_source_files_properties(${SUBMODULE_CMAKE}/imgui/backends/imgui_impl_metal.mm
+                PROPERTIES COMPILE_FLAGS "-x objective-c++")
+
+    elseif (WIN32)
+        # !!! UNTESTED !!!
+        # DirectX Configuration for Windows
+        set(IMGUI_REQ
+                ${IMGUI_MAIN}
+                ${SUBMODULE_CMAKE}/imgui/backends/imgui_impl_dx12.cpp
+        )
+
+    else () # Linux will default to Vulkan
+        set(IMGUI_REQ
+                ${IMGUI_MAIN}
+                ${SUBMODULE_CMAKE}/imgui/backends/imgui_impl_vulkan.cpp
+        )
+    endif ()
 endif()

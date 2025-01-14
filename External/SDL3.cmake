@@ -8,6 +8,7 @@ if(WIN32)
 endif ()
 
 if (APPLE)
+
     add_library(SDL3 SHARED IMPORTED)
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/SDL3)
     set(SDL3_DIR "${CMAKE_SOURCE_DIR}/External/SDL3")

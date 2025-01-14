@@ -5,6 +5,7 @@ if(APPLE)
 endif ()
 project(AppTemplate)
 
+
 message(STATUS "Generating CMake Build Files For Application")
 
 set(CMAKE_CXX_STANDARD 20)

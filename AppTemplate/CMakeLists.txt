@@ -13,9 +13,11 @@ else()
         message(STATUS "Building Non-Debug/Release Build")
 endif()
 
+
 add_executable(AppTemplate
-        src/main.cpp
+#        src/main.mm
         src/main.h
+        src/main.cpp
         ${TINYFD_REQ}
         ${IMGUI_REQ}
         src/fileDialog.cpp
@@ -32,6 +34,8 @@ if(APPLE)
         )
         # Link against the SDL3-static target
         target_link_libraries(AppTemplate PRIVATE SDL3 ${GRAPHICS_INCLUDE_LIBRARIES})
+
+
 endif ()
 if (WIN32)
         # Include SDL3 headers
