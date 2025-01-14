@@ -1,0 +1,16 @@
+if (GRAPHICS_BACKEND STREQUAL "VULKAN")
+    message(STATUS "Graphics backend is set to VULKAN.")
+
+    find_package(Vulkan REQUIRED)
+    message(STATUS "Vulkan Library Location: ${Vulkan_LIBRARIES}" )
+    set(GRAPHICS_INCLUDE_DIRECTORIES ${Vulkan_INCLUDE_DIRS})
+    set(GRAPHICS_INCLUDE_LIBRARIES ${Vulkan_LIBRARIES})
+elseif (GRAPHICS_BACKEND STREQUAL "OPENGL")
+    message(STATUS "Graphics backend is set to OPENGL.")
+
+    find_package(OpenGL)
+    message(STATUS "Vulkan Library Location: ${OpenGL_LIBRARIES}" )
+    set(GRAPHICS_INCLUDE_LIBRARIES OpenGL::GL)
+else ()
+    message(STATUS "Graphics backend is not set -- will use default for platform.")
+endif()

@@ -1,0 +1,158 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						3
+					],
+					"jsonFile" : "directory-.-Release-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.30"
+					},
+					"projectIndex" : 0,
+					"source" : "."
+				},
+				{
+					"build" : "External",
+					"childIndexes" : 
+					[
+						2
+					],
+					"jsonFile" : "directory-External-Release-ddd1102c45b028832a75.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.30"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "External"
+				},
+				{
+					"build" : "External/SDL3",
+					"jsonFile" : "directory-External.SDL3-Release-426977021b9a89785af8.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.17"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 1,
+					"source" : "External/SDL3",
+					"targetIndexes" : 
+					[
+						1,
+						2,
+						3,
+						4
+					]
+				},
+				{
+					"build" : "AppTemplate",
+					"jsonFile" : "directory-AppTemplate-Release-cd45ab4956f8cdbe1027.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.30"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "AppTemplate",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"name" : "Release",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1
+					],
+					"directoryIndexes" : 
+					[
+						0,
+						1,
+						3
+					],
+					"name" : "AppTemplate",
+					"targetIndexes" : 
+					[
+						0
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						2
+					],
+					"name" : "SDL3",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						1,
+						2,
+						3,
+						4
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 3,
+					"id" : "AppTemplate::@0ccb631b8d06049c841e",
+					"jsonFile" : "target-AppTemplate-Release-998f9e5efaaa2fe9606f.json",
+					"name" : "AppTemplate",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "SDL3-shared::@0e616e05d2f866b80002",
+					"jsonFile" : "target-SDL3-shared-Release-d1ea5e022e15726c9d2f.json",
+					"name" : "SDL3-shared",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "SDL3_test::@0e616e05d2f866b80002",
+					"jsonFile" : "target-SDL3_test-Release-bc02658d59cd8df8be53.json",
+					"name" : "SDL3_test",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "SDL_uclibc::@0e616e05d2f866b80002",
+					"jsonFile" : "target-SDL_uclibc-Release-4ef496d278218ef18166.json",
+					"name" : "SDL_uclibc",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "uninstall::@0e616e05d2f866b80002",
+					"jsonFile" : "target-uninstall-Release-905c055f9eceacd1b179.json",
+					"name" : "uninstall",
+					"projectIndex" : 1
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/Users/grahamhill/Github/SDL3-Vulkan-DearImGUI-Template/cmake-build-release",
+		"source" : "/Users/grahamhill/Github/SDL3-Vulkan-DearImGUI-Template"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}

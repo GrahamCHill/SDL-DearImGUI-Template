@@ -1,8 +1,10 @@
-find_package(Vulkan REQUIRED)
-
 # Use the option below to Auto Bundle your app on macOS
-option(USE_BUNDLER OFF) # If using IDE change option->set and OFF->True
-message(STATUS "Vulkan Library Location: ${Vulkan_LIBRARIES}" )
+# If using IDE change option->set and OFF->True
+option(USE_BUNDLER OFF) # WILL NOT WORK IF NOT VULKAN RIGHT NOW
+# Options are "OPENGL", "VULKAN" or to delete it and let the system decide
+set(GRAPHICS_BACKEND "VULKAN")
+
+include(graphics_backend.cmake)
 include(Submodules/CMakeLists.txt)
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -26,16 +28,16 @@ if(APPLE)
         target_include_directories(AppTemplate
                 PRIVATE
                 ${SDL3_INCLUDE}
-                ${Vulkan_INCLUDE_DIRS}
+                ${GRAPHICS_INCLUDE_DIRECTORIES}
         )
         # Link against the SDL3-static target
-        target_link_libraries(AppTemplate PRIVATE SDL3 ${Vulkan_LIBRARIES})
+        target_link_libraries(AppTemplate PRIVATE SDL3 ${GRAPHICS_INCLUDE_LIBRARIES})
 endif ()
 if (WIN32)
         # Include SDL3 headers
-        target_include_directories(AppTemplate PRIVATE ${SDL3_INCLUDE} ${Vulkan_INCLUDE_DIRS})
+        target_include_directories(AppTemplate PRIVATE ${SDL3_INCLUDE} ${GRAPHICS_INCLUDE_DIRECTORIES})
         # Link SDL3 library
-        target_link_libraries(AppTemplate PRIVATE SDL3::SDL3 ${Vulkan_LIBRARIES})
+        target_link_libraries(AppTemplate PRIVATE SDL3::SDL3 ${GRAPHICS_INCLUDE_LIBRARIES})
 
 endif ()
 
