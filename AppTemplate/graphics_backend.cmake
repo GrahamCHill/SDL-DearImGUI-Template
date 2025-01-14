@@ -52,14 +52,8 @@ elseif (GRAPHICS_BACKEND STREQUAL "METAL")
         set(GRAPHICS_INCLUDE_LIBRARIES ${Vulkan_LIBRARIES})
     endif ()
 else ()
-    # Will eventually change this to the SDL3 renderer, but haven't had time to test it
-    message(WARNING "This will become the SDL3 renderer, do not assume it will work as OPENGL forever!")
-    message(STATUS "Graphics backend is not set -- will use OpenGL for all platforms.")
-
-    message(STATUS "Graphics backend is set to OPENGL.")
-
-    find_package(OpenGL)
-    message(STATUS "OpenGL Library Location: ${OpenGL_LIBRARIES}" )
-    set(GRAPHICS_INCLUDE_LIBRARIES OpenGL::GL)
+    message(STATUS "Graphics backend is not set -- will use SDL Renderer for all platforms.")
+    message(STATUS "Graphics backend is set to use default SDL renderer.")
+    message(WARNING "It is better to choose a specific renderer like \"VULKAN\" or \"METAL\" or \"OPENGL\"")
 
 endif()

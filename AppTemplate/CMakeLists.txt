@@ -1,7 +1,8 @@
 # Use the option below to Auto Bundle your app on macOS
 # If using IDE change option->set and OFF->True
 option(USE_BUNDLER OFF) # WILL NOT WORK IF NOT VULKAN RIGHT NOW
-# Options are "OPENGL", "VULKAN" or to delete it and let the system decide
+# Options are "OPENGL", "VULKAN", "METAL" or to delete it and let the system decide
+# Note Metal means using default platform metal on mac, dx11 on windows, and vulkan on linux
 set(GRAPHICS_BACKEND "VULKAN")
 
 include(graphics_backend.cmake)

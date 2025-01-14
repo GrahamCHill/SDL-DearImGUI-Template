@@ -23,7 +23,7 @@ elseif (GRAPHICS_BACKEND STREQUAL "OPENGL")
             ${IMGUI_MAIN}
             ${SUBMODULE_CMAKE}/imgui/backends/imgui_impl_opengl3.cpp
     )
-else ()
+elseif (GRAPHICS_BACKEND STREQUAL "METAL")
     if (APPLE)
         # Metal Configuration for macOS
         set(IMGUI_REQ
@@ -47,4 +47,11 @@ else ()
                 ${SUBMODULE_CMAKE}/imgui/backends/imgui_impl_vulkan.cpp
         )
     endif ()
+
+else ()
+    set(IMGUI_REQ
+            ${IMGUI_MAIN}
+            ${SUBMODULE_CMAKE}/imgui/backends/imgui_impl_sdlrenderer3.cpp
+    )
+
 endif()
