@@ -13,53 +13,45 @@
             INSTALL_RPATH "${MAC_INSTAlL_RPATH_PATH}"
     )
 
-
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E make_directory
             "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Frameworks/"
             COMMAND ${CMAKE_COMMAND} -E make_directory
             "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Resources/"
-            COMMAND ${CMAKE_COMMAND} -E make_directory
-            "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Resources/vulkan/icd.d/"
-
-
-            # Copying Vulkan Files, The library will link to these and if it fails
-            COMMAND ${CMAKE_COMMAND} -E copy
-            "$ENV{HOME}/VulkanSDK/${VULKAN_VERSION}/macOS/lib/${VULKAN_LIB}"
-            "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Frameworks/libvulkan.1.dylib"
-            COMMAND ${CMAKE_COMMAND} -E copy
-            "$ENV{HOME}/VulkanSDK/${VULKAN_VERSION}/macOS/lib/${VULKAN_LIB}"
-            "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Frameworks/${VULKAN_LIB}"
-            COMMAND ${CMAKE_COMMAND} -E copy
-            "$ENV{HOME}/VulkanSDK/${VULKAN_VERSION}/macOS/lib/libMoltenVK.dylib"
-            "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Frameworks/libMoltenVK.dylib"
-            COMMAND ${CMAKE_COMMAND} -E copy
-            "${CMAKE_CURRENT_SOURCE_DIR}/MoltenVK_icd.json"
-            "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Resources/vulkan/icd.d/MoltenVK_icd.json"
-
-
-            COMMAND install_name_tool -change
-            "@rpath/libvulkan.1.dylib"
-            "@executable_path/../Frameworks/libvulkan.1.dylib"
-            "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/${PROJECT_NAME}"
     )
 
-
-    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-        message(STATUS "Bundling for a debug build -- will not be portable")
+    if (GRAPHICS_BACKEND STREQUAL "VULKAN")
         add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-                # This is what copies the SDL3 Frameworks over to the output binary
+                # Copying Vulkan Files, The library will link to these and if it fails
+                COMMAND ${CMAKE_COMMAND} -E make_directory
+                "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Resources/vulkan/icd.d/"
                 COMMAND ${CMAKE_COMMAND} -E copy
-                "${CMAKE_CURRENT_BINARY_DIR}/../External/SDL3/libSDL3.0.dylib"
-                "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Frameworks/libSDL3.0.dylib"
+                "$ENV{HOME}/VulkanSDK/${VULKAN_VERSION}/macOS/lib/${VULKAN_LIB}"
+                "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Frameworks/libvulkan.1.dylib"
+                COMMAND ${CMAKE_COMMAND} -E copy
+                "$ENV{HOME}/VulkanSDK/${VULKAN_VERSION}/macOS/lib/${VULKAN_LIB}"
+                "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Frameworks/${VULKAN_LIB}"
+                COMMAND ${CMAKE_COMMAND} -E copy
+                "$ENV{HOME}/VulkanSDK/${VULKAN_VERSION}/macOS/lib/libMoltenVK.dylib"
+                "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Frameworks/libMoltenVK.dylib"
+                COMMAND ${CMAKE_COMMAND} -E copy
+                "${CMAKE_CURRENT_SOURCE_DIR}/MoltenVK_icd.json"
+                "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Resources/vulkan/icd.d/MoltenVK_icd.json"
 
-
+                # Changing install-path for executable
                 COMMAND install_name_tool -change
-                "@rpath/libSDL3.0.dylib"
-                "@executable_path/../Frameworks/libSDL3.0.dylib"
+                "@rpath/libvulkan.1.dylib"
+                "${MAC_INSTAlL_RPATH_PATH}/libvulkan.1.dylib"
                 "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/${PROJECT_NAME}"
         )
-    elseif (NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
+    elseif (GRAPHICS_BACKEND STREQUAL "OPENGL")
+
+    else ()
+
+    endif()
+
+
+
         #Copies, relinks the frameworks file, adds folders in App bundle
         add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
                 # This is what copies the SDL3 Frameworks over to the output binary
@@ -70,10 +62,9 @@
 
                 COMMAND install_name_tool -change
                 "@rpath/libSDL3.0.dylib"
-                "@executable_path/../Frameworks/libSDL3.0.dylib"
+                "${MAC_INSTAlL_RPATH_PATH}/libSDL3.0.dylib"
                 "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/${PROJECT_NAME}"
         )
-    endif ()
 
     # Use file(GLOB ...) to get the list of files matching the wildcard pattern
     file(GLOB SOURCE_FILES "${SOURCE_DIR}/${SOURCE_PATTERN}")
