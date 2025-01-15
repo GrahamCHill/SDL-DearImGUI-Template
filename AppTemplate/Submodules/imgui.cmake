@@ -10,7 +10,7 @@ set(IMGUI_MAIN
         ${SUBMODULE_CMAKE}/imgui/imgui_demo.cpp
         ${SUBMODULE_CMAKE}/imgui/imgui_tables.cpp
         ${SUBMODULE_CMAKE}/imgui/imgui_widgets.cpp
-        ${SUBMODULE_CMAKE}/imgui/backends/imgui_impl_sdl3.cpp
+        ${SUBMODULE_CMAKE}/imgui/backends/imgui_impl_sdl2.cpp
 )
 
 if (GRAPHICS_BACKEND STREQUAL "VULKAN")
@@ -51,7 +51,7 @@ elseif (GRAPHICS_BACKEND STREQUAL "METAL")
 else ()
     set(IMGUI_REQ
             ${IMGUI_MAIN}
-            ${SUBMODULE_CMAKE}/imgui/backends/imgui_impl_sdlrenderer3.cpp
+            ${SUBMODULE_CMAKE}/imgui/backends/imgui_impl_sdlrenderer2.cpp
     )
 
 endif()

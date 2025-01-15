@@ -1,9 +1,8 @@
-include(SDL3.cmake)
+include(SDL2.cmake)
 
-# Set include path for SDL3
-set(SDL3_INCLUDE
-        ${SDL3_DIR}/include
-        CACHE STRING "Path to SDL3 include directory"
+# Set include path for SDL2
+set(SDL2_INCLUDE
+        ${SDL2_DIR}/include
+        CACHE STRING "Path to SDL2 include directory"
         )
-#add_subdirectory(${SDL3_DIR})
-message(STATUS "SDL3 Include Location: ${SDL3_INCLUDE}")
+message(STATUS "SDL2 Include Location: ${SDL2_INCLUDE}")

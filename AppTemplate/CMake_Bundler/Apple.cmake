@@ -70,11 +70,11 @@ endif()
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
         # This is what copies the SDL3 Frameworks over to the output binary
         COMMAND ${CMAKE_COMMAND} -E copy
-        "${CMAKE_CURRENT_BINARY_DIR}/../External/SDL3/libSDL3.0.dylib"
-        "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Frameworks/libSDL3.0.dylib"
+        "${CMAKE_CURRENT_BINARY_DIR}/../External/SDL3/libSDL2-2.0.0.dylib"
+        "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Frameworks/libSDL2-2.0.0.dylib"
         COMMAND install_name_tool -change
-        "@rpath/libSDL3.0.dylib"
-        "${MAC_INSTAlL_RPATH_PATH}/libSDL3.0.dylib"
+        "@rpath/libSDL2-2.0.0.dylib"
+        "${MAC_INSTAlL_RPATH_PATH}/libSDL2-2.0.0.dylib"
         "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/${PROJECT_NAME}"
 )
 

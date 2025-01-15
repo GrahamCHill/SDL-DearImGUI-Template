@@ -5,6 +5,7 @@
 [submodule "AppTemplate/Submodules/tinyfd"]
 	path = AppTemplate/Submodules/tinyfd
 	url = http://git.code.sf.net/p/tinyfiledialogs/code
-[submodule "External/SDL3"]
-	path = External/SDL3
+[submodule "External/SDL2"]
+	path = External/SDL2
 	url = https://github.com/libsdl-org/SDL.git
+	branch = SDL2
