@@ -65,18 +65,41 @@ endif()
 
 
 
-# Copies, relinks SDL3, adds folders in App bundle
+# Copies, relinks SDL2, adds folders in App bundle
 #
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-        # This is what copies the SDL3 Frameworks over to the output binary
-        COMMAND ${CMAKE_COMMAND} -E copy
-        "${CMAKE_CURRENT_BINARY_DIR}/../External/SDL3/libSDL2-2.0.0.dylib"
-        "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Frameworks/libSDL2-2.0.0.dylib"
-        COMMAND install_name_tool -change
-        "@rpath/libSDL2-2.0.0.dylib"
-        "${MAC_INSTAlL_RPATH_PATH}/libSDL2-2.0.0.dylib"
-        "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/${PROJECT_NAME}"
-)
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+            # This is what copies the SDL2 Frameworks over to the output binary
+            COMMAND ${CMAKE_COMMAND} -E copy
+            "${CMAKE_CURRENT_BINARY_DIR}/../External/SDL2/libSDL2-2.0d.0.dylib"
+            "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Frameworks/libSDL2-2.0d.0.dylib"
+
+
+            COMMAND install_name_tool -change
+            "@rpath/libSDL2-2.0d.0.dylib"
+            "${MAC_INSTAlL_RPATH_PATH}/libSDL2-2.0d.0.dylib"
+            "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/${PROJECT_NAME}"
+    )
+
+
+elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+            # This is what copies the SDL2 Frameworks over to the output binary
+            COMMAND ${CMAKE_COMMAND} -E copy
+            "${CMAKE_CURRENT_BINARY_DIR}/../External/SDL2/libSDL2-2.0.dylib"
+            "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/Frameworks/libSDL2-2.0.dylib"
+
+
+            COMMAND install_name_tool -change
+            "@rpath/libSDL2-2.0.0.dylib"
+            "${MAC_INSTAlL_RPATH_PATH}/libSDL2-2.0.dylib"
+            "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.app/Contents/MacOS/${PROJECT_NAME}"
+    )
+
+endif ()
+
+
 
 # Use file(GLOB ...) to get the list of files matching the wildcard pattern
 file(GLOB SOURCE_FILES "${SOURCE_DIR}/${SOURCE_PATTERN}")

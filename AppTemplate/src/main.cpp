@@ -1,25 +1,20 @@
-// Dear ImGui: standalone example application for SDL2 + Vulkan
+#ifdef __unix__
 
-// Learn about Dear ImGui:
-// - FAQ                  https://dearimgui.com/faq
-// - Getting Started      https://dearimgui.com/getting-started
-// - Documentation        https://dearimgui.com/docs (same as your local docs/ folder).
-// - Introduction, links and more at the top of imgui.cpp
 
-// Important note to the reader who wish to integrate imgui_impl_vulkan.cpp/.h in their own engine/app.
-// - Common ImGui_ImplVulkan_XXX functions and structures are used to interface with imgui_impl_vulkan.cpp/.h.
-//   You will use those if you want to use this rendering backend in your engine/app.
-// - Helper ImGui_ImplVulkanH_XXX functions and structures are only used by this example (main.cpp) and by
-//   the backend itself (imgui_impl_vulkan.cpp), but should PROBABLY NOT be used by your own engine/app code.
-// Read comments in imgui_impl_vulkan.h.
+#elif defined(_WIN32) || defined(WIN32)
+
+#include <windows.h>
+
+#endif
+
 
 #include "imgui.h"
 #include "imgui_impl_sdl2.h"
 #include "imgui_impl_vulkan.h"
 #include <cstdio>          // printf, fprintf
 #include <cstdlib>         // abort
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_vulkan.h>
+#include <SDL.h>
+#include <SDL_vulkan.h>
 
 // Volk headers
 #ifdef IMGUI_IMPL_VULKAN_USE_VOLK
@@ -37,9 +32,9 @@ static VkAllocationCallbacks*   g_Allocator = nullptr;
 static VkInstance               g_Instance = VK_NULL_HANDLE;
 static VkPhysicalDevice         g_PhysicalDevice = VK_NULL_HANDLE;
 static VkDevice                 g_Device = VK_NULL_HANDLE;
-static uint32_t                 g_QueueFamily = (uint32_t)-1;
+static uint32_t                 g_QueueFamily = static_cast<uint32_t>(-1);
 static VkQueue                  g_Queue = VK_NULL_HANDLE;
-static VkDebugReportCallbackEXT g_DebugReport = VK_NULL_HANDLE;
+[[maybe_unused]] static VkDebugReportCallbackEXT g_DebugReport = VK_NULL_HANDLE;
 static VkPipelineCache          g_PipelineCache = VK_NULL_HANDLE;
 static VkDescriptorPool         g_DescriptorPool = VK_NULL_HANDLE;
 
@@ -47,7 +42,7 @@ static ImGui_ImplVulkanH_Window g_MainWindowData;
 static uint32_t                 g_MinImageCount = 2;
 static bool                     g_SwapChainRebuild = false;
 
-static void check_vk_result(VkResult err)
+static void check_vk_result(const VkResult err)
 {
     if (err == 0)
         return;
@@ -81,7 +76,7 @@ static VkPhysicalDevice SetupVulkan_SelectPhysicalDevice()
     IM_ASSERT(gpu_count > 0);
 
     ImVector<VkPhysicalDevice> gpus;
-    gpus.resize(gpu_count);
+    gpus.resize(static_cast<int>(gpu_count));
     err = vkEnumeratePhysicalDevices(g_Instance, &gpu_count, gpus.Data);
     check_vk_result(err);
 
@@ -118,7 +113,7 @@ static void SetupVulkan(ImVector<const char*> instance_extensions)
         uint32_t properties_count;
         ImVector<VkExtensionProperties> properties;
         vkEnumerateInstanceExtensionProperties(nullptr, &properties_count, nullptr);
-        properties.resize(properties_count);
+        properties.resize(static_cast<int>(properties_count));
         err = vkEnumerateInstanceExtensionProperties(nullptr, &properties_count, properties.Data);
         check_vk_result(err);
 
@@ -142,7 +137,7 @@ static void SetupVulkan(ImVector<const char*> instance_extensions)
 #endif
 
         // Create Vulkan Instance
-        create_info.enabledExtensionCount = (uint32_t)instance_extensions.Size;
+        create_info.enabledExtensionCount = static_cast<uint32_t>(instance_extensions.Size);
         create_info.ppEnabledExtensionNames = instance_extensions.Data;
         err = vkCreateInstance(&create_info, g_Allocator, &g_Instance);
         check_vk_result(err);
@@ -150,7 +145,7 @@ static void SetupVulkan(ImVector<const char*> instance_extensions)
         volkLoadInstance(g_Instance);
 #endif
 
-        // Setup the debug report callback
+        // Set up the debug report callback
 #ifdef APP_USE_VULKAN_DEBUG_REPORT
         auto f_vkCreateDebugReportCallbackEXT = (PFN_vkCreateDebugReportCallbackEXT)vkGetInstanceProcAddr(g_Instance, "vkCreateDebugReportCallbackEXT");
         IM_ASSERT(f_vkCreateDebugReportCallbackEXT != nullptr);
@@ -171,7 +166,7 @@ static void SetupVulkan(ImVector<const char*> instance_extensions)
     {
         uint32_t count;
         vkGetPhysicalDeviceQueueFamilyProperties(g_PhysicalDevice, &count, nullptr);
-        VkQueueFamilyProperties* queues = (VkQueueFamilyProperties*)malloc(sizeof(VkQueueFamilyProperties) * count);
+        auto* queues = static_cast<VkQueueFamilyProperties *>(malloc(sizeof(VkQueueFamilyProperties) * count));
         vkGetPhysicalDeviceQueueFamilyProperties(g_PhysicalDevice, &count, queues);
         for (uint32_t i = 0; i < count; i++)
             if (queues[i].queueFlags & VK_QUEUE_GRAPHICS_BIT)
@@ -180,7 +175,7 @@ static void SetupVulkan(ImVector<const char*> instance_extensions)
                 break;
             }
         free(queues);
-        IM_ASSERT(g_QueueFamily != (uint32_t)-1);
+        IM_ASSERT(g_QueueFamily != static_cast<uint32_t>(-1));
     }
 
     // Create Logical Device (with 1 queue)
@@ -192,14 +187,14 @@ static void SetupVulkan(ImVector<const char*> instance_extensions)
         uint32_t properties_count;
         ImVector<VkExtensionProperties> properties;
         vkEnumerateDeviceExtensionProperties(g_PhysicalDevice, nullptr, &properties_count, nullptr);
-        properties.resize(properties_count);
+        properties.resize(static_cast<int>(properties_count));
         vkEnumerateDeviceExtensionProperties(g_PhysicalDevice, nullptr, &properties_count, properties.Data);
 #ifdef VK_KHR_PORTABILITY_SUBSET_EXTENSION_NAME
         if (IsExtensionAvailable(properties, VK_KHR_PORTABILITY_SUBSET_EXTENSION_NAME))
             device_extensions.push_back(VK_KHR_PORTABILITY_SUBSET_EXTENSION_NAME);
 #endif
 
-        const float queue_priority[] = { 1.0f };
+        constexpr float queue_priority[] = { 1.0f };
         VkDeviceQueueCreateInfo queue_info[1] = {};
         queue_info[0].sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
         queue_info[0].queueFamilyIndex = g_QueueFamily;
@@ -209,7 +204,7 @@ static void SetupVulkan(ImVector<const char*> instance_extensions)
         create_info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
         create_info.queueCreateInfoCount = sizeof(queue_info) / sizeof(queue_info[0]);
         create_info.pQueueCreateInfos = queue_info;
-        create_info.enabledExtensionCount = (uint32_t)device_extensions.Size;
+        create_info.enabledExtensionCount = static_cast<uint32_t>(device_extensions.Size);
         create_info.ppEnabledExtensionNames = device_extensions.Data;
         err = vkCreateDevice(g_PhysicalDevice, &create_info, g_Allocator, &g_Device);
         check_vk_result(err);
@@ -221,14 +216,14 @@ static void SetupVulkan(ImVector<const char*> instance_extensions)
     // If you wish to load e.g. additional textures you may need to alter pools sizes.
     {
         VkDescriptorPoolSize pool_sizes[] =
-        {
-            { VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1 },
-        };
+                {
+                        { VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1 },
+                };
         VkDescriptorPoolCreateInfo pool_info = {};
         pool_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
         pool_info.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
         pool_info.maxSets = 1;
-        pool_info.poolSizeCount = (uint32_t)IM_ARRAYSIZE(pool_sizes);
+        pool_info.poolSizeCount = static_cast<uint32_t>(IM_ARRAYSIZE(pool_sizes));
         pool_info.pPoolSizes = pool_sizes;
         err = vkCreateDescriptorPool(g_Device, &pool_info, g_Allocator, &g_DescriptorPool);
         check_vk_result(err);
@@ -251,8 +246,8 @@ static void SetupVulkanWindow(ImGui_ImplVulkanH_Window* wd, VkSurfaceKHR surface
     }
 
     // Select Surface Format
-    const VkFormat requestSurfaceImageFormat[] = { VK_FORMAT_B8G8R8A8_UNORM, VK_FORMAT_R8G8B8A8_UNORM, VK_FORMAT_B8G8R8_UNORM, VK_FORMAT_R8G8B8_UNORM };
-    const VkColorSpaceKHR requestSurfaceColorSpace = VK_COLORSPACE_SRGB_NONLINEAR_KHR;
+    constexpr VkFormat requestSurfaceImageFormat[] = { VK_FORMAT_B8G8R8A8_UNORM, VK_FORMAT_R8G8B8A8_UNORM, VK_FORMAT_B8G8R8_UNORM, VK_FORMAT_R8G8B8_UNORM };
+    constexpr VkColorSpaceKHR requestSurfaceColorSpace = VK_COLORSPACE_SRGB_NONLINEAR_KHR;
     wd->SurfaceFormat = ImGui_ImplVulkanH_SelectSurfaceFormat(g_PhysicalDevice, wd->Surface, requestSurfaceImageFormat, (size_t)IM_ARRAYSIZE(requestSurfaceImageFormat), requestSurfaceColorSpace);
 
     // Select Present Mode
@@ -290,11 +285,10 @@ static void CleanupVulkanWindow()
 
 static void FrameRender(ImGui_ImplVulkanH_Window* wd, ImDrawData* draw_data)
 {
-    VkResult err;
-
     VkSemaphore image_acquired_semaphore  = wd->FrameSemaphores[wd->SemaphoreIndex].ImageAcquiredSemaphore;
     VkSemaphore render_complete_semaphore = wd->FrameSemaphores[wd->SemaphoreIndex].RenderCompleteSemaphore;
-    err = vkAcquireNextImageKHR(g_Device, wd->Swapchain, UINT64_MAX, image_acquired_semaphore, VK_NULL_HANDLE, &wd->FrameIndex);
+    VkResult err = vkAcquireNextImageKHR(g_Device, wd->Swapchain, UINT64_MAX, image_acquired_semaphore, VK_NULL_HANDLE,
+                                         &wd->FrameIndex);
     if (err == VK_ERROR_OUT_OF_DATE_KHR || err == VK_SUBOPTIMAL_KHR)
     {
         g_SwapChainRebuild = true;
@@ -378,7 +372,7 @@ static void FramePresent(ImGui_ImplVulkanH_Window* wd)
 }
 
 // Main code
-int main(int, char**)
+int main(int argc, char *args[])
 {
     // Setup SDL
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0)
@@ -393,7 +387,7 @@ int main(int, char**)
 #endif
 
     // Create window with Vulkan graphics context
-    SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_VULKAN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
+    constexpr auto window_flags = static_cast<SDL_WindowFlags>(SDL_WINDOW_VULKAN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
     SDL_Window* window = SDL_CreateWindow("Dear ImGui SDL2+Vulkan example", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
     if (window == nullptr)
     {
@@ -404,13 +398,12 @@ int main(int, char**)
     ImVector<const char*> extensions;
     uint32_t extensions_count = 0;
     SDL_Vulkan_GetInstanceExtensions(window, &extensions_count, nullptr);
-    extensions.resize(extensions_count);
+    extensions.resize(static_cast<int>(extensions_count));
     SDL_Vulkan_GetInstanceExtensions(window, &extensions_count, extensions.Data);
     SetupVulkan(extensions);
 
     // Create Window Surface
     VkSurfaceKHR surface;
-    VkResult err;
     if (SDL_Vulkan_CreateSurface(window, g_Instance, &surface) == 0)
     {
         printf("Failed to create Vulkan surface.\n");
@@ -433,6 +426,11 @@ int main(int, char**)
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
     //io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoTaskBarIcons;
     //io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
+
+    const char* ini_filename = "../Resources/imgui.ini";
+    io.IniFilename = nullptr;
+    ImGui::LoadIniSettingsFromDisk(ini_filename);
+
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
@@ -504,11 +502,6 @@ int main(int, char**)
             if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(window))
                 done = true;
         }
-        if (SDL_GetWindowFlags(window) & SDL_WINDOW_MINIMIZED)
-        {
-            SDL_Delay(10);
-            continue;
-        }
 
         // Resize swap chain?
         int fb_width, fb_height;
@@ -520,6 +513,7 @@ int main(int, char**)
             g_MainWindowData.FrameIndex = 0;
             g_SwapChainRebuild = false;
         }
+
 
         // Start the Dear ImGui frame
         ImGui_ImplVulkan_NewFrame();
@@ -535,14 +529,14 @@ int main(int, char**)
             static float f = 0.0f;
             static int counter = 0;
 
-            ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+            ImGui::Begin("Hello, world!!!!");                          // Create a window called "Hello, world!" and append into it.
 
             ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
             ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
             ImGui::Checkbox("Another Window", &show_another_window);
 
             ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-            ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
+            ImGui::ColorEdit3("clear color", reinterpret_cast<float *>(&clear_color)); // Edit 3 floats representing a color
 
             if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
                 counter++;
@@ -584,13 +578,18 @@ int main(int, char**)
         // Present Main Platform Window
         if (!main_is_minimized)
             FramePresent(wd);
+        // Below Fixes an intermittent flickering bug on macOS with moltenVK
+        // ¯\_(ツ)_/¯
+        SDL_Delay(16); // 60 FPS cap
+
     }
 
     // Cleanup
-    err = vkDeviceWaitIdle(g_Device);
+    const VkResult err = vkDeviceWaitIdle(g_Device);
     check_vk_result(err);
     ImGui_ImplVulkan_Shutdown();
     ImGui_ImplSDL2_Shutdown();
+    ImGui::SaveIniSettingsToDisk(ini_filename);
     ImGui::DestroyContext();
 
     CleanupVulkanWindow();
@@ -601,3 +600,15 @@ int main(int, char**)
 
     return 0;
 }
+
+#ifdef __unix__
+
+
+#elif defined(_WIN32) || defined(WIN32)
+
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
+                   LPSTR lpCmdLine, int nCmdShow) {
+    return main(__argc, __argv);
+}
+
+#endif
