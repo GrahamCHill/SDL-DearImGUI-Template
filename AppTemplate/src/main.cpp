@@ -1,27 +1,20 @@
-#include "main.h"
+#ifdef __unix__
 
 
-// Dear ImGui: standalone example application for SDL3 + Vulkan
+#elif defined(_WIN32) || defined(WIN32)
 
-// Learn about Dear ImGui:
-// - FAQ                  https://dearimgui.com/faq
-// - Getting Started      https://dearimgui.com/getting-started
-// - Documentation        https://dearimgui.com/docs (same as your local docs/ folder).
-// - Introduction, links and more at the top of imgui.cpp
+#include <windows.h>
 
-// Important note to the reader who wish to integrate imgui_impl_vulkan.cpp/.h in their own engine/app.
-// - Common ImGui_ImplVulkan_XXX functions and structures are used to interface with imgui_impl_vulkan.cpp/.h.
-//   You will use those if you want to use this rendering backend in your engine/app.
-// - Helper ImGui_ImplVulkanH_XXX functions and structures are only used by this example (main.cpp) and by
-//   the backend itself (imgui_impl_vulkan.cpp), but should PROBABLY NOT be used by your own engine/app code.
-// Read comments in imgui_impl_vulkan.h.
-
-
-
-// This example doesn't compile with Emscripten yet! Awaiting SDL3 support.
-#ifdef __EMSCRIPTEN__
-#include "../libs/emscripten/emscripten_mainloop_stub.h"
 #endif
+
+
+#include "imgui.h"
+#include "imgui_impl_sdl2.h"
+#include "imgui_impl_vulkan.h"
+#include <cstdio>          // printf, fprintf
+#include <cstdlib>         // abort
+#include <SDL.h>
+#include <SDL_vulkan.h>
 
 // Volk headers
 #ifdef IMGUI_IMPL_VULKAN_USE_VOLK
@@ -49,7 +42,7 @@ static ImGui_ImplVulkanH_Window g_MainWindowData;
 static uint32_t                 g_MinImageCount = 2;
 static bool                     g_SwapChainRebuild = false;
 
-static void check_vk_result(VkResult err)
+static void check_vk_result(const VkResult err)
 {
     if (err == 0)
         return;
@@ -209,7 +202,7 @@ static void SetupVulkan(ImVector<const char*> instance_extensions)
         queue_info[0].pQueuePriorities = queue_priority;
         VkDeviceCreateInfo create_info = {};
         create_info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-        create_info.queueCreateInfoCount = std::size(queue_info);
+        create_info.queueCreateInfoCount = sizeof(queue_info) / sizeof(queue_info[0]);
         create_info.pQueueCreateInfos = queue_info;
         create_info.enabledExtensionCount = static_cast<uint32_t>(device_extensions.Size);
         create_info.ppEnabledExtensionNames = device_extensions.Data;
@@ -223,9 +216,9 @@ static void SetupVulkan(ImVector<const char*> instance_extensions)
     // If you wish to load e.g. additional textures you may need to alter pools sizes.
     {
         VkDescriptorPoolSize pool_sizes[] =
-        {
-            { VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1 },
-        };
+                {
+                        { VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, 1 },
+                };
         VkDescriptorPoolCreateInfo pool_info = {};
         pool_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
         pool_info.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
@@ -379,18 +372,23 @@ static void FramePresent(ImGui_ImplVulkanH_Window* wd)
 }
 
 // Main code
-int main(int, char**)
+int main(int argc, char *args[])
 {
     // Setup SDL
-    if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMEPAD) != 0)
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) != 0)
     {
-        printf("Error: SDL_Init(): %s\n", SDL_GetError());
+        printf("Error: %s\n", SDL_GetError());
         return -1;
     }
 
+    // From 2.0.18: Enable native IME.
+#ifdef SDL_HINT_IME_SHOW_UI
+    SDL_SetHint(SDL_HINT_IME_SHOW_UI, "1");
+#endif
+
     // Create window with Vulkan graphics context
-    auto window_flags = (SDL_WindowFlags)(SDL_WINDOW_VULKAN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY | SDL_WINDOW_HIDDEN);
-    SDL_Window* window = SDL_CreateWindow("Dear ImGui SDL3+Vulkan example", 1280, 720, window_flags);
+    constexpr auto window_flags = static_cast<SDL_WindowFlags>(SDL_WINDOW_VULKAN | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
+    SDL_Window* window = SDL_CreateWindow("Dear ImGui SDL2+Vulkan example", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720, window_flags);
     if (window == nullptr)
     {
         printf("Error: SDL_CreateWindow(): %s\n", SDL_GetError());
@@ -398,18 +396,15 @@ int main(int, char**)
     }
 
     ImVector<const char*> extensions;
-    {
-        uint32_t sdl_extensions_count = 0;
-        const char* const* sdl_extensions = SDL_Vulkan_GetInstanceExtensions(&sdl_extensions_count);
-        for (uint32_t n = 0; n < sdl_extensions_count; n++)
-            extensions.push_back(sdl_extensions[n]);
-    }
+    uint32_t extensions_count = 0;
+    SDL_Vulkan_GetInstanceExtensions(window, &extensions_count, nullptr);
+    extensions.resize(static_cast<int>(extensions_count));
+    SDL_Vulkan_GetInstanceExtensions(window, &extensions_count, extensions.Data);
     SetupVulkan(extensions);
 
     // Create Window Surface
     VkSurfaceKHR surface;
-    VkResult err;
-    if (SDL_Vulkan_CreateSurface(window, g_Instance, g_Allocator, &surface) == 0)
+    if (SDL_Vulkan_CreateSurface(window, g_Instance, &surface) == 0)
     {
         printf("Failed to create Vulkan surface.\n");
         return 1;
@@ -420,8 +415,6 @@ int main(int, char**)
     SDL_GetWindowSize(window, &w, &h);
     ImGui_ImplVulkanH_Window* wd = &g_MainWindowData;
     SetupVulkanWindow(wd, surface, w, h);
-    SDL_SetWindowPosition(window, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED);
-    SDL_ShowWindow(window);
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
@@ -433,6 +426,11 @@ int main(int, char**)
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
     //io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoTaskBarIcons;
     //io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
+
+    const char* ini_filename = "../Resources/imgui.ini";
+    io.IniFilename = nullptr;
+    ImGui::LoadIniSettingsFromDisk(ini_filename);
+
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
@@ -447,7 +445,7 @@ int main(int, char**)
     }
 
     // Setup Platform/Renderer backends
-    ImGui_ImplSDL3_InitForVulkan(window);
+    ImGui_ImplSDL2_InitForVulkan(window);
     ImGui_ImplVulkan_InitInfo init_info = {};
     init_info.Instance = g_Instance;
     init_info.PhysicalDevice = g_PhysicalDevice;
@@ -498,16 +496,11 @@ int main(int, char**)
         SDL_Event event;
         while (SDL_PollEvent(&event))
         {
-            ImGui_ImplSDL3_ProcessEvent(&event);
-            if (event.type == SDL_EVENT_QUIT)
+            ImGui_ImplSDL2_ProcessEvent(&event);
+            if (event.type == SDL_QUIT)
                 done = true;
-            if (event.type == SDL_EVENT_WINDOW_CLOSE_REQUESTED && event.window.windowID == SDL_GetWindowID(window))
+            if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(window))
                 done = true;
-        }
-        if (SDL_GetWindowFlags(window) & SDL_WINDOW_MINIMIZED)
-        {
-            SDL_Delay(10);
-            continue;
         }
 
         // Resize swap chain?
@@ -521,9 +514,10 @@ int main(int, char**)
             g_SwapChainRebuild = false;
         }
 
+
         // Start the Dear ImGui frame
         ImGui_ImplVulkan_NewFrame();
-        ImGui_ImplSDL3_NewFrame();
+        ImGui_ImplSDL2_NewFrame();
         ImGui::NewFrame();
 
         // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
@@ -535,7 +529,7 @@ int main(int, char**)
             static float f = 0.0f;
             static int counter = 0;
 
-            ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
+            ImGui::Begin("Hello, world!!!!");                          // Create a window called "Hello, world!" and append into it.
 
             ImGui::Text("This is some useful text.");               // Display some text (you can use a format strings too)
             ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
@@ -552,47 +546,6 @@ int main(int, char**)
             ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
             ImGui::End();
         }
-        {
-            // ImGui::SetNextWindowPos(ImVec2(200, 600), ImGuiCond_Once );
-            ImGui::SetNextWindowSize(ImVec2(400, 200), ImGuiCond_Once);
-            ImGui::Begin("File Dialog Test", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse );
-
-            ImGui::TextWrapped("This opens a default file system explorer to select a file, it also remembers where "
-                        "last you were in the file explorer.");
-            ImGui::Spacing();
-            // Get last selected path
-            std::string lastPath = fileDialog::getLastSelectedPath();
-
-            // Determine the default path (fall back to executable path or documents folder)
-            if (lastPath.empty()) {
-                lastPath = fileDialog::getExecutablePath(); // Default to executable directory
-                // Uncomment the line below to default to the documents folder instead:
-                // lastPath = fileDialog::getDocumentsPath();
-            }
-
-            if (ImGui::Button("Open File Dialog")) {
-                const char* filePath = tinyfd_openFileDialog(
-                    "Select a File",        // Title
-                    lastPath.c_str(),       // Default path (last or fallback)
-                    0,                      // Number of filters
-                    nullptr,                // Filters
-                    nullptr,                // Description
-                    0                       // Allow multiple selections (0 = no, 1 = yes)
-                );
-
-                // Check if filePath is valid
-                if (filePath) {
-                    std::string selectedPath = std::string(filePath).substr(0, std::string(filePath).find_last_of("\\/"));
-                    fileDialog::saveLastSelectedPath(selectedPath);
-                    std::cout << "Selected file: " << filePath << std::endl;
-                } else {
-                    std::cout << "No file selected or operation canceled." << std::endl;
-                }
-            }
-
-            ImGui::End();
-        }
-
 
         // 3. Show another simple window.
         if (show_another_window)
@@ -625,13 +578,18 @@ int main(int, char**)
         // Present Main Platform Window
         if (!main_is_minimized)
             FramePresent(wd);
+        // Below Fixes an intermittent flickering bug on macOS with moltenVK
+        // ¯\_(ツ)_/¯
+        SDL_Delay(16); // 60 FPS cap
+
     }
 
     // Cleanup
-    err = vkDeviceWaitIdle(g_Device);
+    const VkResult err = vkDeviceWaitIdle(g_Device);
     check_vk_result(err);
     ImGui_ImplVulkan_Shutdown();
-    ImGui_ImplSDL3_Shutdown();
+    ImGui_ImplSDL2_Shutdown();
+    ImGui::SaveIniSettingsToDisk(ini_filename);
     ImGui::DestroyContext();
 
     CleanupVulkanWindow();
@@ -642,3 +600,15 @@ int main(int, char**)
 
     return 0;
 }
+
+#ifdef __unix__
+
+
+#elif defined(_WIN32) || defined(WIN32)
+
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
+                   LPSTR lpCmdLine, int nCmdShow) {
+    return main(__argc, __argv);
+}
+
+#endif

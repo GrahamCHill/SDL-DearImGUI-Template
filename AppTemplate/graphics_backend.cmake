@@ -15,10 +15,6 @@ elseif (GRAPHICS_BACKEND STREQUAL "OPENGL")
 elseif (GRAPHICS_BACKEND STREQUAL "METAL")
     message(STATUS "Graphics backend is set to Metal -- will use default for other platforms.")
     if (APPLE)
-        # Metal Configuration for macOS
-        message(WARNING "DearIMGUI Multi-window is not supported yet!!!")
-        message( "Do not enable io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable; in your code")
-
         find_library(METAL_LIBRARY "Metal" REQUIRED)
         find_library(METALKIT_LIBRARY "MetalKit" REQUIRED)
         find_library(COCOA_LIBRARY "COCOA" REQUIRED)
