@@ -1,6 +1,8 @@
 
 # SDL2+DearImGU Project Template
 
+## Currently a bug preventing builds on Windows, will fix ASAP
+
 If you want the SDL3 version got to [SDL3 Template](https://github.com/GrahamCHill/SDL3-template)
 This template is built with git submodules, and CMake!
 
