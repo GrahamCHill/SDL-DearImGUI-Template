@@ -1,14 +1,12 @@
 
-# SDL3+Vulkan+DearImGU Project Template
+# SDL2+DearImGU Project Template
 
-This is the SDL2 version, but for use it will need to be moved to it's own repo, or to be merged into the parent
-
-
+If you want the SDL3 version got to [SDL3 Template](https://github.com/GrahamCHill/SDL3-template)
 This template is built with git submodules, and CMake!
 
 This a template designed around the CMake build system, it includes 
 [Dear ImGui](https://github.com/ocornut/imgui), [Vulkan](https://vulkan.lunarg.com/),
-[SDL3](https://github.com/libsdl-org/SDL), and [Tiny File Dialog](https://sourceforge.net/projects/tinyfiledialogs/).
+[SDL2](https://github.com/libsdl-org/SDL), and [Tiny File Dialog](https://sourceforge.net/projects/tinyfiledialogs/).
 
 ### Building
 #### Requirements
@@ -24,7 +22,7 @@ On Linux based systems [GCC](https://gcc.gnu.org/) or another appropriate compil
 On macOS when you install Xcode, you should have all you need to build it.  
 
 #### Commands
-If you open the Folder `SDL3-Vulkan-DearImGUI-Template` (the top level of this git repository), in your chosen platforms console/terminal 
+If you open the Folder `SDL2-Vulkan-DearImGUI-Template` (the top level of this git repository), in your chosen platforms console/terminal 
 you can run the following commands to build the project
 
 ```shell
@@ -60,13 +58,13 @@ Finally remove the following from `/AppTemplate/CMakeLists.txt` located in the `
 - `src/fileDialog.h`
 - `${TINYFD_REQ}`
 
-You can also disable Vulkan and use only SDL3's renderer, if you choose by modifying your CMakeLists files, as this template is
-built for you to make use of so you can skip to learning SDL3, Dear ImGui, Vulkan, and/or whatever you want to add/remove into 
+You can also disable Vulkan and use only SDL2's renderer, if you choose by modifying your CMakeLists files, as this template is
+built for you to make use of so you can skip to learning SDL2, Dear ImGui, Vulkan, and/or whatever you want to add/remove into 
 this template.
 
 ### Adding New Libraries/git Projects
 
-To add a new library like SDL3, I recomend using the project layout I have set up and adding it as either a git submodule if 
+To add a new library, I recomend using the project layout I have set up and adding it as either a git submodule if 
 it can be built with CMake to the folder `/External/` followed by the project/git repository name, if adding with git submodules
 you can for example run (the command below shows how to add the SDL2 branch to your project, if you would rather use that*.)
 ```shell
@@ -94,7 +92,7 @@ project.
 - This project uses Vulkan. The license for which is available from them 
 [Vulkan Site](https://vulkan.lunarg.com/license/).
 
-- This project uses SDL3. The Zlib license is included in the folder `external/SDL3`.
+- This project uses SDL2. The Zlib license is included in the folder `external/SDL2`.
 
 - This project uses the Tiny File Dialog Project. The zlib license is included in the source code files of 
 `src/Submodules/tinyfd`.
