@@ -1,6 +1,9 @@
 
 # SDL3+Vulkan+DearImGU Project Template
 
+This is the SDL2 version, but for use it will need to be moved to it's own repo, or to be merged into the parent
+
+
 This template is built with git submodules, and CMake!
 
 This a template designed around the CMake build system, it includes 
