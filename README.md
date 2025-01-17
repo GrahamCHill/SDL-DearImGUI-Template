@@ -1,10 +1,19 @@
 
 # SDL2+DearImGU Project Template
 
-## Currently a bug preventing builds on Windows, will fix ASAP
 
 If you want the SDL3 version got to [SDL3 Template](https://github.com/GrahamCHill/SDL3-template)
-This template is built with git submodules, and CMake!
+This template is built with git submodules, and CMake!  
+
+This template uses git submodules, if you do *not* git clone it and just use download from the web, you will have to 
+place the content of SDL2 into the SDL folder in the folder External/SDL2 and the content of Tiny File Dialog (if you want 
+to use it,) in AppTemplate/Submodules/tinyfd (or you can delete the files relating to it and remove the references in
+the CMake files.)  
+
+You can Change the rendering backend without much effort, as time progresses I will make this process easier, but at the 
+moment it can be done easily by changing the contents of src/main (the actual entry point of your program,) and the 
+graphics-backend value in CMake (You can see the options in AppTemplate/CMakeLists.txt.)  
+
 
 This a template designed around the CMake build system, it includes 
 [Dear ImGui](https://github.com/ocornut/imgui), [Vulkan](https://vulkan.lunarg.com/),
