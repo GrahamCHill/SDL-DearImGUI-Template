@@ -370,21 +370,15 @@ std::string getIniFilePath(const std::string& appName) {
 
 #elif defined(__APPLE__)
     // On macOS, use ~/Library/Application Support/AppName
-    const char* home = std::getenv("HOME");
-    if (home) {
+    if (const char *home = std::getenv("HOME")) {
         iniFilePath = std::string(home) + "/Library/Application Support/" + appName + "/imgui.ini";
-    } else {
-        // Fallback to the current working directory if HOME is not set
-        iniFilePath = "./imgui.ini";
     }
-
 #elif defined(__linux__)
     // On Linux, use ~/.config/AppName or ~/Documents/AppName
-    const char* home = std::getenv("HOME");
-    if (home) {
+
+    if (const char* home = std::getenv("HOME")) {
         // Check for the existence of XDG_CONFIG_HOME
-        const char* xdgConfigHome = std::getenv("XDG_CONFIG_HOME");
-        if (xdgConfigHome) {
+        if (const char* xdgConfigHome = std::getenv("XDG_CONFIG_HOME")) {
             iniFilePath = std::string(xdgConfigHome) + "/" + appName + "/imgui.ini";
         } else {
             // Fallback to ~/.config/AppName
@@ -398,6 +392,11 @@ std::string getIniFilePath(const std::string& appName) {
     // For other platforms, fallback to the current working directory
     iniFilePath = "./imgui.ini";
 #endif
+    // Ensure the directory exists
+    if (!iniFilePath.empty()) {
+        const std::filesystem::path iniDir = std::filesystem::path(iniFilePath).parent_path();
+        create_directories(iniDir);
+    }
 
     return iniFilePath;
 }
@@ -458,17 +457,16 @@ int main(int argc, char *args[])
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;         // Enable Docking
     io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;       // Enable Multi-Viewport / Platform Windows
     //io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoTaskBarIcons;
-    //io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
+    // io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
 
 
-
-    std::string iniPath = getIniFilePath("MyApp");
+    const std::string iniPath = getIniFilePath("AppTemplate");
 
     // Set the INI file location
     if (!iniPath.empty()) {
         ImGui::GetIO().IniFilename = iniPath.c_str();
     }
-    io.IniFilename = nullptr;
+    // io.IniFilename = nullptr;
     ImGui::LoadIniSettingsFromDisk(iniPath.c_str());
 
 
