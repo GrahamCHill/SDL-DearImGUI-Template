@@ -53,7 +53,7 @@ if (WIN32)
         # Include SDL3 headers
         target_include_directories(AppTemplate PRIVATE ${SDL2_INCLUDE} ${GRAPHICS_INCLUDE_DIRECTORIES})
         # Link SDL3 library
-        target_link_libraries(AppTemplate PRIVATE SDL2::SDL2 ${GRAPHICS_INCLUDE_LIBRARIES})
+        target_link_libraries(AppTemplate PRIVATE SDL2main SDL2 ${GRAPHICS_INCLUDE_LIBRARIES})
 
 endif ()
 

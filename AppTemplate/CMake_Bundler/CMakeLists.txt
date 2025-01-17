@@ -17,24 +17,34 @@ else()
         add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
                 COMMAND install_name_tool -change
                 "@rpath/libSDL2-2.0d.0.dylib"
-                "@executable_path/../External/SDL2/libSDL2-2.0d.0.dylib"
+                "@executable_path/External/SDL2/libSDL2-2.0d.0.dylib"
                 "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}"
         )
     elseif (CMAKE_BUILD_TYPE STREQUAL "Release" AND APPLE AND NOT USE_BUNDLER)
         add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
                 COMMAND install_name_tool -change
                 "@rpath/libSDL2-2.0.0.dylib"
-                "@executable_path/../External/SDL2/libSDL2-2.0.0.dylib"
+                "@executable_path/External/SDL2/libSDL2-2.0.0.dylib"
                 "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}"
         )
     endif ()
 
-    if (WIN32)
+
+    # Windows
+    if (CMAKE_BUILD_TYPE STREQUAL "Debug" AND WIN32 AND NOT USE_BUNDLER)
         add_custom_command(
                 TARGET ${PROJECT_NAME} POST_BUILD
                 COMMAND ${CMAKE_COMMAND} -E copy
-                "${CMAKE_CURRENT_BINARY_DIR}/../external/SDL3/SDL3.dll"
-                "${CMAKE_CURRENT_BINARY_DIR}/SDL3.dll"
+                "${CMAKE_CURRENT_BINARY_DIR}/../External/SDL2/SDL2d.dll"
+                "${CMAKE_CURRENT_BINARY_DIR}/SDL2d.dll"
+        )
+    elseif (CMAKE_BUILD_TYPE STREQUAL "Release" AND WIN32 AND NOT USE_BUNDLER)
+        add_custom_command(
+                TARGET ${PROJECT_NAME} POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E copy
+                "${CMAKE_CURRENT_BINARY_DIR}/../External/SDL2/SDL2.dll"
+                "${CMAKE_CURRENT_BINARY_DIR}/SDL2.dll"
         )
     endif ()
+
 endif()
