@@ -350,29 +350,54 @@ std::string getIniFilePath(const std::string& appName) {
 
 #ifdef _WIN32
     // On Windows, use %APPDATA%\AppName
-    const char* appData = std::getenv("APPDATA");
-    if (appData) {
+    char* appData = nullptr;
+    size_t len = 0;
+
+    if (_dupenv_s(&appData, &len, "APPDATA") == 0 && appData != nullptr) {
         iniFilePath = std::string(appData) + "\\" + appName + "\\imgui.ini";
+        free(appData);
     } else {
-        // Fallback to Documents\AppName if APPDATA is not set
-        const char* userProfile = std::getenv("USERPROFILE");
-        if (userProfile) {
+        // Fallback to %USERPROFILE%\Documents\AppName if APPDATA is not set
+        char* userProfile = nullptr;
+        if (_dupenv_s(&userProfile, &len, "USERPROFILE") == 0 && userProfile != nullptr) {
             iniFilePath = std::string(userProfile) + "\\Documents\\" + appName + "\\imgui.ini";
+            free(userProfile);
+        } else {
+            // Default fallback path if nothing is available
+            iniFilePath = "imgui.ini";
         }
     }
-#else
+
+#elif defined(__APPLE__)
     // On macOS, use ~/Library/Application Support/AppName
     const char* home = std::getenv("HOME");
     if (home) {
         iniFilePath = std::string(home) + "/Library/Application Support/" + appName + "/imgui.ini";
+    } else {
+        // Fallback to the current working directory if HOME is not set
+        iniFilePath = "./imgui.ini";
     }
-#endif
 
-    // Ensure the directory exists
-    if (!iniFilePath.empty()) {
-        std::filesystem::path iniDir = std::filesystem::path(iniFilePath).parent_path();
-        std::filesystem::create_directories(iniDir);
+#elif defined(__linux__)
+    // On Linux, use ~/.config/AppName or ~/Documents/AppName
+    const char* home = std::getenv("HOME");
+    if (home) {
+        // Check for the existence of XDG_CONFIG_HOME
+        const char* xdgConfigHome = std::getenv("XDG_CONFIG_HOME");
+        if (xdgConfigHome) {
+            iniFilePath = std::string(xdgConfigHome) + "/" + appName + "/imgui.ini";
+        } else {
+            // Fallback to ~/.config/AppName
+            iniFilePath = std::string(home) + "/.config/" + appName + "/imgui.ini";
+        }
+    } else {
+        // Fallback to the current working directory if HOME is not set
+        iniFilePath = "./imgui.ini";
     }
+#else
+    // For other platforms, fallback to the current working directory
+    iniFilePath = "./imgui.ini";
+#endif
 
     return iniFilePath;
 }
