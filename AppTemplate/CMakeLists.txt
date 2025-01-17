@@ -6,6 +6,8 @@ option(USE_BUNDLER OFF) # WILL NOT WORK IF NOT VULKAN RIGHT NOW
 set(GRAPHICS_BACKEND "VULKAN")
 
 include(graphics_backend.cmake)
+include(src/BackendRenderer/CMakeLists.txt)
+include(src/FileManagement/CMakeLists.txt)
 include(Submodules/CMakeLists.txt)
 # Lazy fix for sdl2
 include_directories(
@@ -20,20 +22,15 @@ endif()
 
 
 add_executable(AppTemplate
-        # Logic for the Metal/SDL2 backend still needs to be sorted, but for now
-        # you can comment out src/main.h and src/main.cpp and uncomment src/main.mm
-        # to test Metal/SDL3 support (Note windows can't be removed from main window
-        # ie floating windows, as this will cause a segfault currently.)
-#        src/main.mm
         src/main.h
         src/main.cpp
         ${TINYFD_REQ}
         ${IMGUI_REQ}
-        src/fileDialog.cpp
-        src/fileDialog.h
+        ${RENDERERS_MAIN}
+        ${FILEMANAGEMENT_MAIN}
         # Currently issues with high DPI monitors, eg Parallels VM running Windows on m1 mac
         # Will look into easy fixes when the logic is written
-#        main.cpp  # This is the DX11 and hopefully eventually working DX12 SDL3 code
+#        main.cpp  # This is the DX11 and hopefully eventually working DX12 SDL2 code
 )
 message(STATUS "SDL2 Directory: ${SDL2_DIR}")
 

@@ -23,6 +23,9 @@
 #include <SDL.h>
 #include <SDL_vulkan.h>
 #include <filesystem>
+#include "Vulkan_Renderer.h"
+
+#include "imguiSettingsManager.h"
 
 // Volk headers
 #ifdef IMGUI_IMPL_VULKAN_USE_VOLK
