@@ -1,5 +1,5 @@
 
-# SDL2+DearImGU Project Template
+# SDL2+DearImGUI Project Template
 
 
 If you want the SDL3 version got to [SDL3 Template](https://github.com/GrahamCHill/SDL3-template)
