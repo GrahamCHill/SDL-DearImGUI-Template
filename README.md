@@ -7,7 +7,7 @@ This template is built with git submodules, and CMake!
 
 This template uses git submodules, if you do *not* git clone it and just use download from the web, you will have to 
 place the content of SDL2 into the SDL folder in the folder External/SDL2 and the content of Tiny File Dialog (if you want 
-to use it,) in AppTemplate/Submodules/tinyfd (or you can delete the files relating to it and remove the references in
+to use it,) in AppTemplate/Submodules/tinyfd (or you can delete the files and folders relating to it and remove the references in
 the CMake files.)  
 
 You can Change the rendering backend without much effort, as time progresses I will make this process easier, but at the 
