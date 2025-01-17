@@ -1,31 +1,4 @@
-#ifdef __unix__
-
-
-#elif defined(_WIN32) || defined(WIN32)
-
-#include <windows.h>
-
-#endif
-
-
-#include "imgui.h"
-#include "imgui_impl_sdl2.h"
-#include "imgui_impl_vulkan.h"
-#include <cstdio>          // printf, fprintf
-#include <cstdlib>         // abort
-#include <SDL.h>
-#include <SDL_vulkan.h>
-
-// Volk headers
-#ifdef IMGUI_IMPL_VULKAN_USE_VOLK
-#define VOLK_IMPLEMENTATION
-#include <volk.h>
-#endif
-
-//#define APP_USE_UNLIMITED_FRAME_RATE
-#ifdef _DEBUG
-#define APP_USE_VULKAN_DEBUG_REPORT
-#endif
+#include "main.h"
 
 // Data
 static VkAllocationCallbacks*   g_Allocator = nullptr;
@@ -371,6 +344,41 @@ static void FramePresent(ImGui_ImplVulkanH_Window* wd)
     wd->SemaphoreIndex = (wd->SemaphoreIndex + 1) % wd->SemaphoreCount; // Now we can use the next set of semaphores
 }
 
+
+std::string getIniFilePath(const std::string& appName) {
+    std::string iniFilePath;
+
+#ifdef _WIN32
+    // On Windows, use %APPDATA%\AppName
+    const char* appData = std::getenv("APPDATA");
+    if (appData) {
+        iniFilePath = std::string(appData) + "\\" + appName + "\\imgui.ini";
+    } else {
+        // Fallback to Documents\AppName if APPDATA is not set
+        const char* userProfile = std::getenv("USERPROFILE");
+        if (userProfile) {
+            iniFilePath = std::string(userProfile) + "\\Documents\\" + appName + "\\imgui.ini";
+        }
+    }
+#else
+    // On macOS, use ~/Library/Application Support/AppName
+    const char* home = std::getenv("HOME");
+    if (home) {
+        iniFilePath = std::string(home) + "/Library/Application Support/" + appName + "/imgui.ini";
+    }
+#endif
+
+    // Ensure the directory exists
+    if (!iniFilePath.empty()) {
+        std::filesystem::path iniDir = std::filesystem::path(iniFilePath).parent_path();
+        std::filesystem::create_directories(iniDir);
+    }
+
+    return iniFilePath;
+}
+
+
+
 // Main code
 int main(int argc, char *args[])
 {
@@ -427,9 +435,16 @@ int main(int argc, char *args[])
     //io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoTaskBarIcons;
     //io.ConfigFlags |= ImGuiConfigFlags_ViewportsNoMerge;
 
-    const char* ini_filename = "../Resources/imgui.ini";
+
+
+    std::string iniPath = getIniFilePath("MyApp");
+
+    // Set the INI file location
+    if (!iniPath.empty()) {
+        ImGui::GetIO().IniFilename = iniPath.c_str();
+    }
     io.IniFilename = nullptr;
-    ImGui::LoadIniSettingsFromDisk(ini_filename);
+    ImGui::LoadIniSettingsFromDisk(iniPath.c_str());
 
 
     // Setup Dear ImGui style
@@ -589,7 +604,7 @@ int main(int argc, char *args[])
     check_vk_result(err);
     ImGui_ImplVulkan_Shutdown();
     ImGui_ImplSDL2_Shutdown();
-    ImGui::SaveIniSettingsToDisk(ini_filename);
+    ImGui::SaveIniSettingsToDisk(iniPath.c_str());
     ImGui::DestroyContext();
 
     CleanupVulkanWindow();
